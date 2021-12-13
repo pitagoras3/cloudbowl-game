@@ -12,6 +12,8 @@ import reactor.core.publisher.Mono
 @SpringBootApplication
 class KotlinApplication {
 
+    private var counter = 0
+
     @Bean
     fun routes() = router {
         GET {
@@ -20,8 +22,9 @@ class KotlinApplication {
 
         POST("/**", accept(APPLICATION_JSON)) { request ->
             request.bodyToMono(ArenaUpdate::class.java).flatMap { arenaUpdate ->
-                println(arenaUpdate)
-                ServerResponse.ok().body(Mono.just("T"))
+                if(counter % 5 == 0) ServerResponse.ok().body(Mono.just("F"))
+                if(counter % 2 == 0) ServerResponse.ok().body(Mono.just("T"))
+                else ServerResponse.ok().body(Mono.just("R"))
             }
         }
     }
